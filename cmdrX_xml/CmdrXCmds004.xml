@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Test changes in Executable Directory, i.e. the directory where the command
+is executed.
+-->
+<Commands>
+	<CommandFileHeader>
+		<DefaultLogFileRetentionInDays>0</DefaultLogFileRetentionInDays>
+		<DefaultCommandExeDirectory></DefaultCommandExeDirectory>
+		<DefaultCommandOutputLogFilePathName>./cmdrx/install.log</DefaultCommandOutputLogFilePathName>
+	</CommandFileHeader>
+	<ExectuteCommand>
+		<CommandDisplayName>Copy1</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan></KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir>D:\T08\</ExecuteInDir>
+		<ExecutableTarget>Copy</ExecutableTarget>
+		<CommandToExecute></CommandToExecute>
+		<CommandModifier></CommandModifier>
+		<CommandArguments>D:\T06\*.*</CommandArguments>
+	</ExectuteCommand>
+	<ExectuteCommand>
+		<CommandDisplayName>Copy2</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan></KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir></ExecuteInDir>
+		<ExecutableTarget>Copy</ExecutableTarget>
+		<CommandToExecute></CommandToExecute>
+		<CommandModifier></CommandModifier>
+		<CommandArguments>D:\T07\*.*</CommandArguments>
+	</ExectuteCommand>
+</Commands>

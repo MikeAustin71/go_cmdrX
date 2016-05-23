@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+This command file used to back up Atom configurations.
+The last series of commands peforms repository updates with 'git'
+-->
+<Commands>
+	<CommandFileHeader>
+		<DefaultLogFileRetentionInDays>0</DefaultLogFileRetentionInDays>
+		<DefaultCommandExeDirectory></DefaultCommandExeDirectory>
+		<DefaultCommandOutputLogFilePathName>./cmdrx/install.log</DefaultCommandOutputLogFilePathName>
+	</CommandFileHeader>
+	<ExectuteCommand>
+		<CommandDisplayName>Delete Current Config</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan></KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir></ExecuteInDir>
+		<ExecutableTarget>del</ExecutableTarget>
+		<CommandToExecute></CommandToExecute>
+		<CommandModifier></CommandModifier>
+		<CommandArguments>.\CurrentConfig\*.* /S /Q</CommandArguments>
+	</ExectuteCommand>
+	<ExectuteCommand>
+		<CommandDisplayName>Copy Atom Config Files</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan>15</KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir></ExecuteInDir>
+		<ExecutableTarget>robocopy</ExecutableTarget>
+		<CommandToExecute>C:\Users\mike10\.atom\</CommandToExecute>
+		<CommandModifier>D:\Atom\Config\CurrentConfig\PersonalConfig</CommandModifier>
+		<CommandArguments>*.json *.cson *.less /DCOPY:DAT</CommandArguments>
+	</ExectuteCommand>
+	<ExectuteCommand>
+		<CommandDisplayName>Copy Atom Packages</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan></KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir>D:\Atom\Config\CurrentConfig\PackageList</ExecuteInDir>
+		<ExecutableTarget></ExecutableTarget>
+		<CommandToExecute>apm</CommandToExecute>
+		<CommandModifier>--installed --bare ></CommandModifier>
+		<CommandArguments>packages.list</CommandArguments>
+	</ExectuteCommand>
+	<ExectuteCommand>
+		<CommandDisplayName>Create Backup Directory</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan></KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir></ExecuteInDir>
+		<ExecutableTarget></ExecutableTarget>
+		<CommandToExecute>mkdir</CommandToExecute>
+		<CommandModifier></CommandModifier>
+		<CommandArguments>.\%(CURDATESTR)%_AtomConfig</CommandArguments>
+	</ExectuteCommand>
+	<ExectuteCommand>
+		<CommandDisplayName>Save Atom Config Backup Dir</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan>15</KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir></ExecuteInDir>
+		<ExecutableTarget>robocopy</ExecutableTarget>
+		<CommandToExecute>.\CurrentConfig</CommandToExecute>
+		<CommandModifier>.\%(CURDATESTR)%_AtomConfig</CommandModifier>
+		<CommandArguments>*.* /E</CommandArguments>
+	</ExectuteCommand>
+	<ExectuteCommand>
+		<CommandDisplayName>Git checkout dev branch</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan></KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir>D:\Atom</ExecuteInDir>
+		<ExecutableTarget>git</ExecutableTarget>
+		<CommandToExecute></CommandToExecute>
+		<CommandModifier></CommandModifier>
+		<CommandArguments>checkout dev</CommandArguments>
+	</ExectuteCommand>
+	<ExectuteCommand>
+		<CommandDisplayName>Git Add</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan></KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir>D:\Atom</ExecuteInDir>
+		<ExecutableTarget>git</ExecutableTarget>
+		<CommandToExecute></CommandToExecute>
+		<CommandModifier></CommandModifier>
+		<CommandArguments>add -A</CommandArguments>
+	</ExectuteCommand>
+	<ExectuteCommand>
+		<CommandDisplayName>Git Commit</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan></KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir>D:\Atom</ExecuteInDir>
+		<ExecutableTarget>git</ExecutableTarget>
+		<CommandToExecute>commit</CommandToExecute>
+		<CommandModifier></CommandModifier>
+		<CommandArguments>-m"Lastest Atom Config"</CommandArguments>
+	</ExectuteCommand>
+	<ExectuteCommand>
+		<CommandDisplayName>Git push origin dev</CommandDisplayName>
+		<ConsoleCommandType>Console</ConsoleCommandType>
+		<KillJobsRunOnExitCodeGreaterThan></KillJobsRunOnExitCodeGreaterThan>
+		<KillJobsRunOnExitCodeLessThan></KillJobsRunOnExitCodeLessThan>
+		<CommandOutputLogFilePathBaseName></CommandOutputLogFilePathBaseName>
+		<!--Time out expressed in decimal fractions of a minute. Example: 10.0 minutes -->
+		<CommandTimeOutInMinutes>15.0</CommandTimeOutInMinutes>
+		<DefaultConsoleCommandExecutor>cmd.exe</DefaultConsoleCommandExecutor>
+		<ConsoleCommandExeArguments>/c</ConsoleCommandExeArguments>
+		<ExecuteInDir>D:\Atom</ExecuteInDir>
+		<ExecutableTarget>git</ExecutableTarget>
+		<CommandToExecute>push</CommandToExecute>
+		<CommandModifier></CommandModifier>
+		<CommandArguments>origin dev</CommandArguments>
+	</ExectuteCommand>
+</Commands>

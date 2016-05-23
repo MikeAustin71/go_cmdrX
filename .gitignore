@@ -1,0 +1,63 @@
+# Ignore Mike Rapp #
+###################
+
+# Compiled Object files, Static and Dynamic libs (Shared Objects) #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.suo
+*.so
+bin
+*.a
+
+# Folders
+_obj
+obj
+/packages
+
+# Ignore Node & Bower
+###################
+node_modules
+bower_components
+jspm_packages
+lib
+build
+#.tmp
+
+# Architecture specific extensions/prefixes
+*.[568vq]
+[568vq].out
+
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+
+*.prof
+
+# Ignore Sublime Text #
+*.sublime-project
+*.sublime-workspace
+
+# Ignore Web Storm #
+.idea
+*.iml
+
+
+
+#other
+*.gpState
+*.user
+# security / ssl
+*.pem
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
