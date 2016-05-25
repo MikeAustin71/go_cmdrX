@@ -7,7 +7,7 @@ import (
 )
 
 type jsonobject struct {
-	Cmds cmdHdr `json:"command_jobs"`
+	Batch cmdHdr `json:"batch_commands"`
 }
 
 type cmdHdr struct {
@@ -30,7 +30,7 @@ func check(e error) {
 
 func main() {
 
-	dat, err := ioutil.ReadFile("./CmdrX_JSON_004.json")
+	dat, err := ioutil.ReadFile("./CmdrX_JSON_005.json")
 	check(err)
 
 	var jsontype jsonobject
@@ -39,8 +39,8 @@ func main() {
 	fmt.Print(string(dat))
 	fmt.Println(jsontype)
 	fmt.Println("=======================================")
-	fmt.Println("Log File Retention In Days:", jsontype.Cmds.Hdr.LogFileRetentionInDays)
-	fmt.Println("First Name:", jsontype.Cmds.Hdr.CmdExeDirectory)
-	fmt.Println("Last Name:", jsontype.Cmds.Hdr.LogPathFileName)
+	fmt.Println("Log File Retention In Days:", jsontype.Batch.Hdr.LogFileRetentionInDays)
+	fmt.Println("First Name:", jsontype.Batch.Hdr.CmdExeDirectory)
+	fmt.Println("Last Name:", jsontype.Batch.Hdr.LogPathFileName)
 
 }
