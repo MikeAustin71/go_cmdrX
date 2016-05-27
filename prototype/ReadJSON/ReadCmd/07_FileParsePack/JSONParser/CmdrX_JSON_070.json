@@ -1,0 +1,61 @@
+{"commands_batch":
+  {
+    "jobs_header" : {
+      "log_file_retention_in_days": -1,
+      "command_exe_directory": ".\\",
+      "log_path_file_name": "./cmdrx/install.log"
+    },
+    "command_jobs" : [
+      {
+        "cmd_display_name":"Copy1",
+        "cmd_description":"Copie Dir 6 to Dir 8",
+        "cmd_type":"Console",
+        "execute_cmd_in_dir":"",
+        "delay_cmd_start_seconds": "0",
+        "start_cmd_date_time":"",
+        "kill_jobs_on_exit_code_greater_than": "",
+        "kill_jobs_on_exit_code_less_than": "",
+        "cmd_timeout_in_minutes":"15.0",
+        "cmd_elements":[
+          {
+            "cmdelement":"cmd.exe"
+          },
+          {
+            "cmdelement":"/c"
+          },
+          {
+            "cmdelement":"Copy"
+          },
+          {
+            "cmdelement":"D:\\T06\\*.* D:\\T08\\"
+          }
+        ]
+      },
+      {
+        "cmd_display_name":"Copy2",
+        "cmd_description":"Copie Dir 7 to Dir 8",
+        "cmd_type":"Console",
+        "execute_cmd_in_dir":"",
+        "delay_cmd_start_seconds": "0",
+        "start_cmd_date_time":"",
+        "kill_jobs_on_exit_code_greater_than": "",
+        "kill_jobs_on_exit_code_less_than": "",
+        "cmd_timeout_in_minutes":"15.0",
+        "cmd_elements":[
+          {
+            "cmdelement":"cmd.exe"
+          },
+          {
+            "cmdelement":"/c"
+          },
+          {
+            "cmdelement":"Copy"
+          },
+          {
+            "cmdelement":"D:\\T07\\*.* D:\\T08\\"
+          }
+        ]
+      }
+    ]
+  }
+}
