@@ -1,8 +1,8 @@
 package main
 
-import(
-	jp "go_cmdrX/src/JsonParser"
+import (
 	"fmt"
+	jp "go_cmdrX/src/JsonParser"
 )
 
 func main() {
@@ -23,4 +23,3 @@ func main() {
 	fmt.Println("Cmd-2 Display Name:", jObj.Batch.Jobs[1].DisplayName)
 	fmt.Println("Cmn-2 Cmd Element-1:", jObj.Batch.Jobs[1].CmdElements[0].CmdUnit)
 }
-
