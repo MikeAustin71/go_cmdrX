@@ -14,7 +14,6 @@ func CommasInt(x int) string {
 	return value
 }
 
-
 // CommasInt64 receives an int64 and returns a string representing
 // the whole number with comma grouping.
 func CommasInt64(x int64) string {
@@ -24,4 +23,3 @@ func CommasInt64(x int64) string {
 	}
 	return value
 }
-
