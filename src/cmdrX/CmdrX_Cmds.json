@@ -8,7 +8,7 @@
     "command_jobs" : [
       {
         "cmd_display_name":"Copy1",
-        "cmd_description":"Copie Dir 6 to Dir 8",
+        "cmd_description":"Copy Dir 6 to Dir 8",
         "cmd_type":"Console",
         "execute_cmd_in_dir":"",
         "delay_cmd_start_seconds": "0",
