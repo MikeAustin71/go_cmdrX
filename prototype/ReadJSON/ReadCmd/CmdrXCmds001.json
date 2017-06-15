@@ -1,9 +1,0 @@
-{
-"commands": {
-        "commandfileheader":{
-            "defaultlogfileretentionindays": -1,
-            "defaultcommandexedirectory": "Test",
-            "default_cmd_log_path_file_name":"./cmdrx/install.log"
-        }
-    }
-}

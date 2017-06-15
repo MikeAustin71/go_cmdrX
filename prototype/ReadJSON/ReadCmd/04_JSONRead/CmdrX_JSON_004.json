@@ -1,9 +1,0 @@
-{"command_jobs":
-  {
-    "jobs_header" : {
-      "log_file_retention_in_days": -1,
-      "command_exe_directory": ".\\",
-      "log_path_file_name": "./cmdrx/install.log"
-    }
-  }
-}
