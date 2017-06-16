@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+New xml format for CmdrGo XML Format
+Input All DateTimes using format: '2006-01-02 15:04:05'
+Time Zone Info will be taken from Element 'IanaTimeZone'
+-->
+<CommandsBatch>
+  <CommandJobsHeader>
+    <Version>2.0</Version>
+    <LogFileRetentionInDays>0</LogFileRetentionInDays>
+    <CommandExeDirectory>.\</CommandExeDirectory>
+    <LogPath>./cmdrx</LogPath>
+    <LogFileName>cmdsrun.log</LogFileName>
+    <KillAllJobsOnFirstError>true</KillAllJobsOnFirstError>
+    <IanaTimeZone>America/Chicago</IanaTimeZone>
+  </CommandJobsHeader>
+  <CommandJobs>
+    <CommandJob>
+      <CommandDisplayName>Copy1</CommandDisplayName>
+      <CommandDescription>RoboCopy Dir 5 to Dir 6</CommandDescription>
+      <CommandType>Console</CommandType>
+      <ExecuteCmdInDir></ExecuteCmdInDir>
+      <DelayCmdStartSeconds></DelayCmdStartSeconds>
+      <StartCmdDateTime></StartCmdDateTime>
+      <KillJobsOnExitCdeGreaterThan>99</KillJobsOnExitCdeGreaterThan>
+      <KillJobsOnExitCdeLessThan>-99</KillJobsOnExitCdeLessThan>
+      <CmdTimeOutInMinutes>15.0</CmdTimeOutInMinutes>
+      <CmdElements>
+        <CmdElement>cmd.exe</CmdElement>
+        <CmdElement>/c</CmdElement>
+        <CmdElement>robocopy</CmdElement>
+        <CmdElement>D:\T05</CmdElement>
+        <CmdElement>D:\T06</CmdElement>
+        <CmdElement>*.txt</CmdElement>
+      </CmdElements>
+    </CommandJob>
+    <CommandJob>
+      <CommandDisplayName>Copy2</CommandDisplayName>
+      <CommandDescription>Copy Dir 6 to Dir 7</CommandDescription>
+      <CommandType>Console</CommandType>
+      <ExecuteCmdInDir></ExecuteCmdInDir>
+      <DelayCmdStartSeconds></DelayCmdStartSeconds>
+      <StartCmdDateTime></StartCmdDateTime>
+      <KillJobsOnExitCdeGreaterThan>99</KillJobsOnExitCdeGreaterThan>
+      <KillJobsOnExitCdeLessThan>-99</KillJobsOnExitCdeLessThan>
+      <CmdTimeOutInMinutes>15.5</CmdTimeOutInMinutes>
+      <CmdElements>
+        <CmdElement>cmd.exe</CmdElement>
+        <CmdElement>/c</CmdElement>
+        <CmdElement>copy</CmdElement>
+        <CmdElement>D:\T06\*.txt</CmdElement>
+        <CmdElement>D:\T07\</CmdElement>
+      </CmdElements>
+    </CommandJob>
+  </CommandJobs>
+</CommandsBatch>
