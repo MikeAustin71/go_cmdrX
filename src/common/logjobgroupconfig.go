@@ -26,6 +26,7 @@ type LogJobGroup struct {
 	Duration                time.Time
 	Dtfmt                   *DateTimeFormatUtility
 	CommandFileName         string
+	CommandFileVersion			string
 	AppName                 string
 	AppExeFileName          string
 	AppVersion              string
@@ -70,6 +71,7 @@ func (logOps *LogJobGroup) New(startParams StartupParameters,
 	logOps.LogMode = startParams.LogMode
 	logOps.StartTime = startParams.StartTime
 	logOps.CommandFileName = startParams.CommandFileName
+	logOps.CommandFileVersion = startParams.CommandFileVersion
 	logOps.AppName = startParams.AppName
 	logOps.AppExeFileName = startParams.AppExeFileName
 	logOps.AppPath = startParams.AppPath
@@ -251,7 +253,7 @@ func (logOps *LogJobGroup) writeFileGroupHeaderToLog(parent []ErrBaseInfo) SpecE
 	logOps.writeFileStr(str, thisParentInfo)
 	logOps.writeFileStr(logOps.Banner1, thisParentInfo)
 
-	str = fmt.Sprintf("Execution Job Group Command File: %v", logOps.CommandFileName)
+	str = fmt.Sprintf("Execution Job Group Command File: %v  Command File Version: %v", logOps.CommandFileName, logOps.CommandFileVersion)
 
 	stx, err = su.StrCenterInStr(str, logOps.BannerLen)
 	if err != nil {
@@ -298,6 +300,13 @@ func (logOps *LogJobGroup) writeFileGroupHeaderToLog(parent []ErrBaseInfo) SpecE
 	str = fmt.Sprintf("Base Start Directory: %v", logOps.BaseStartDir)
 
 	logOps.writeTabFileStr(str, 1, thisParentInfo)
+
+	str = fmt.Sprintf("Iana Time Zone: %v", logOps.IanaTimeZone)
+	logOps.writeTabFileStr(str, 1, thisParentInfo)
+
+	str = fmt.Sprintf("Kill All Jobs on First Error: %v", logOps.KillAllJobsOnFirstError)
+	logOps.writeTabFileStr(str, 1, thisParentInfo)
+
 
 	str = fmt.Sprintf("Number Of Old Log Files Deleted: %v", logOps.NoOfLogFilesPurged)
 

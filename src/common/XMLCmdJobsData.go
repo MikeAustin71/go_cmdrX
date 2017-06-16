@@ -11,9 +11,6 @@ type CommandsBatch struct {
 type CommandJobsHdr struct {
 	Version                 string `xml:"Version"`
 	LogFileRetentionInDays  int    `xml:"LogFileRetentionInDays"`
-	CmdExeDir               string `xml:"CommandExeDirectory"`
-	LogPath         				string `xml:"LogPath"`
-	LogFileName							string `xml:"LogFileName"`
 	KillAllJobsOnFirstError bool   `xml:"KillAllJobsOnFirstError"`
 	IanaTimeZone						string `xml:"IanaTimeZone"`
 	NoOfCmdJobs							int
@@ -44,3 +41,5 @@ type CmdJob struct {
 type CommandElementsArray struct {
 	CmdFragments []string `xml:"CmdElement"`
 }
+
+
