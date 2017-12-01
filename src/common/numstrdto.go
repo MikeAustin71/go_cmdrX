@@ -406,7 +406,7 @@ func (nDto *NumStrDto) FindIntArraySignificantDigitLimits(intArray []int, precis
 
 	lenIntArray := len(intArray)
 
-	absNumStr := []rune{}
+	var absNumStr []rune
 
 	for i := 0; i < lenIntArray; i++ {
 		absNumStr = append(absNumStr, rune(intArray[i]+48))
@@ -603,8 +603,8 @@ func (nDto *NumStrDto) FormatForMathOps(n1Dto, n2Dto NumStrDto) (n1DtoOut NumStr
 
 	if lenN2IntRunes > lenN1IntRunes {
 
-		absAllRunes := []rune{}
-		absIntRunes := []rune{}
+		var absAllRunes []rune
+		var absIntRunes []rune
 		deltaRunes := lenN2IntRunes - lenN1IntRunes
 		for i := 0; i < deltaRunes; i++ {
 			absAllRunes = append(absAllRunes, '0')
@@ -633,8 +633,8 @@ func (nDto *NumStrDto) FormatForMathOps(n1Dto, n2Dto NumStrDto) (n1DtoOut NumStr
 
 	} else if lenN1IntRunes > lenN2IntRunes {
 
-		absAllRunes := []rune{}
-		absIntRunes := []rune{}
+		var absAllRunes []rune
+		var absIntRunes []rune
 		deltaRunes := lenN1IntRunes - lenN2IntRunes
 		for i := 0; i < deltaRunes; i++ {
 			absAllRunes = append(absAllRunes, '0')
