@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"runtime"
 	"sort"
 	"strconv"
 	"strings"
-	"time"
-	"runtime"
 	"sync/atomic"
+	"time"
 )
 
 type DateTimeWriteFormatsToFileDto struct {
@@ -52,18 +52,18 @@ type DateTimeFormatGenerator struct {
 }
 
 type SearchStrings struct {
-	PreTrimSearchStrs          [][][]string
-	TimeFmtRegEx               [][][]string
+	PreTrimSearchStrs [][][]string
+	TimeFmtRegEx      [][][]string
 }
 
 type ParseDateTimeDto struct {
-	IsSuccessful							bool
+	IsSuccessful              bool
 	FormattedDateTimeStringIn string
 	SelectedMapIdx            int
 	SelectedFormat            string
-	TotalNoOfDictSearches			int
+	TotalNoOfDictSearches     int
 	DateTimeOut               time.Time
-	err												error
+	err                       error
 }
 
 type DateTimeFormatUtility struct {
@@ -195,7 +195,7 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 
 			if err != nil {
 				return frDto, fmt.Errorf(
-					"Error converting Format Length field from file. Length = %v. Idx= %v. Format Count: %v",
+					"LoadAllFormatsFromFileIntoMemory - Error converting Format Length field from file. Length = %v. Idx= %v. Format Count: %v",
 					s, idx, frDto.NumberOfFormatsGenerated)
 			}
 
@@ -203,7 +203,7 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 
 			if lOutBuff < fmtFieldLastIdx+1 {
 				return frDto, fmt.Errorf(
-					"Found corrupted Output Buffer. Buffer Length %v, Length Field = %v, Output Buffer= %s Format Count: %v",
+					"LoadAllFormatsFromFileIntoMemory - Found corrupted Output Buffer. Buffer Length %v, Length Field = %v, Output Buffer= %s Format Count: %v",
 					lOutBuff, lFmt, string(outRecordBuff), frDto.NumberOfFormatsGenerated)
 			}
 
@@ -236,8 +236,19 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 	frDto.FileReadEndTime = time.Now()
 	frDto.NumberOfFormatMapKeysGenerated = len(dtf.FormatMap)
 	du := DurationUtility{}
-	etFileWrite, _ := du.GetElapsedTime(frDto.FileReadStartTime, frDto.FileReadEndTime)
-	frDto.ElapsedTimeForFileReadOps = etFileWrite.DurationStr
+	err = du.SetStartEndTimes(frDto.FileReadStartTime, frDto.FileReadEndTime)
+
+	if err != nil {
+		return DateTimeReadFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error SetStartEndTimes() - %v", err.Error())
+	}
+
+	yrMthDaysTime, err := du.GetYearMthDaysTime()
+
+	if err != nil {
+		return DateTimeReadFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error GetYearMthDaysTime() - %v", err.Error())
+	}
+
+	frDto.ElapsedTimeForFileReadOps = yrMthDaysTime.DisplayStr
 
 	return frDto, nil
 }
@@ -285,21 +296,32 @@ func (dtf *DateTimeFormatUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 			_, err := outF.WriteString(fmt.Sprintf("%07d %s\n", k, keyFmt))
 
 			if err != nil {
-				return fwDto, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error writing Format data to output file %v. Error: %v", outputPathFileName, err.Error())
+				return DateTimeWriteFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error writing Format data to output file %v. Error: %v", outputPathFileName, err.Error())
 			}
 		}
 	}
 
 	outF.Sync()
 
-	du := DurationUtility{}
-
 	fwDto.FileWriteEndTime = time.Now()
 
-	etFileWrite, _ := du.GetElapsedTime(fwDto.FileWriteStartTime, fwDto.FileWriteEndTime)
+	du := DurationUtility{}
+
+	err = du.SetStartEndTimes(fwDto.FileWriteStartTime, fwDto.FileWriteEndTime)
+
+	if err != nil {
+		return DateTimeWriteFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error Setting Start End Times for Duration Calculation Error: %v", err.Error())
+	}
 
 	fwDto.OutputPathFileName = outputPathFileName
-	fwDto.ElapsedTimeForFileWriteOps = etFileWrite.DurationStr
+
+	etFileWrite, err := du.GetYearMthDaysTime()
+
+	if err != nil {
+		return DateTimeWriteFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error du.GetYearMthDaysTime() - %v", err.Error())
+	}
+
+	fwDto.ElapsedTimeForFileWriteOps = etFileWrite.DisplayStr
 
 	return fwDto, nil
 }
@@ -315,8 +337,6 @@ func (dtf *DateTimeFormatUtility) WriteFormatStatsToFile(outputPathFileName stri
 	outputDto := DateTimeWriteFormatsToFileDto{}
 	outputDto.OutputPathFileName = outputPathFileName
 	outputDto.FileWriteStartTime = time.Now()
-
-	du := DurationUtility{}
 
 	lFmts := len(dtf.FormatMap)
 
@@ -364,10 +384,20 @@ func (dtf *DateTimeFormatUtility) WriteFormatStatsToFile(outputPathFileName stri
 	}
 
 	outputDto.FileWriteEndTime = time.Now()
+	du := DurationUtility{}
+	err = du.SetStartEndTimes(outputDto.FileWriteStartTime, outputDto.FileWriteEndTime)
 
-	etFileWrite, _ := du.GetElapsedTime(outputDto.FileWriteStartTime, outputDto.FileWriteEndTime)
+	if err != nil {
+		return outputDto, fmt.Errorf("Error Calculating Duration with SetStartEndTimes() Error: %v", err.Error())
+	}
 
-	outputDto.ElapsedTimeForFileWriteOps = etFileWrite.DurationStr
+	etFileWrite, err := du.GetYearMthDaysTime()
+
+	if err != nil {
+		return outputDto, fmt.Errorf("Error Returning Duration with GetYearMthDaysTime() Error: %v", err.Error())
+	}
+
+	outputDto.ElapsedTimeForFileWriteOps = etFileWrite.DisplayStr
 	outputDto.NumberOfFormatsGenerated = numOfFormats
 	outputDto.NumberOfFormatMapKeysGenerated = numOfKeys
 
@@ -408,7 +438,6 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 
 	ftimeStr, err := dtf.trimEndMultiple(xtimeStr, ' ')
 
-
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -443,30 +472,29 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 
 	lenStr := len(ftimeStr)
 
-	lenSequence := make([][]int,0)
+	lenSequence := make([][]int, 0)
 
-	lenTests := []int {
-						lenStr-2,
-						lenStr-3,
-						lenStr-1,
-						lenStr,
-						lenStr+1,
-						lenStr+2,
-						lenStr+3,
-						lenStr-4,
-						lenStr+4,
-						lenStr-5,
-						lenStr+5,
-						lenStr-6,
-						lenStr+6,
-						lenStr-7,
-						lenStr+7,
-						lenStr-8,
-						lenStr+8,
-						lenStr-9,
-						lenStr+9,
+	lenTests := []int{
+		lenStr - 2,
+		lenStr - 3,
+		lenStr - 1,
+		lenStr,
+		lenStr + 1,
+		lenStr + 2,
+		lenStr + 3,
+		lenStr - 4,
+		lenStr + 4,
+		lenStr - 5,
+		lenStr + 5,
+		lenStr - 6,
+		lenStr + 6,
+		lenStr - 7,
+		lenStr + 7,
+		lenStr - 8,
+		lenStr + 8,
+		lenStr - 9,
+		lenStr + 9,
 	}
-
 
 	dtf.TotalNoOfDictSearches = 0
 	dtf.OriginalDateTimeStringIn = dateTimeStr
@@ -479,17 +507,16 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 		threshold = 8
 	}
 
+	ary := make([]int, 0)
+	for i := 0; i < len(lenTests); i++ {
 
-	ary := make([]int,0)
-	for i:=0; i < len(lenTests); i++ {
-
-		if dtf.FormatMap[lenTests[i]] !=nil {
+		if dtf.FormatMap[lenTests[i]] != nil {
 			ary = append(ary, lenTests[i])
 		}
 
 		if len(ary) == threshold {
 			lenSequence = append(lenSequence, ary)
-			ary = make([]int,0)
+			ary = make([]int, 0)
 		}
 
 	}
@@ -498,11 +525,9 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 		lenSequence = append(lenSequence, ary)
 	}
 
+	for j := 0; j < len(lenSequence); j++ {
 
-
-	for j:=0; j < len(lenSequence); j++ {
-
-		if dtf.doParseRun(lenSequence[j], ftimeStr){
+		if dtf.doParseRun(lenSequence[j], ftimeStr) {
 			return dtf.DateTimeOut, nil
 		}
 
@@ -511,7 +536,7 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 	return time.Time{}, errors.New("Failed to locate correct time format!")
 }
 
-func (dtf *DateTimeFormatUtility) doParseRun(lenTests [] int, ftimeStr string) bool {
+func (dtf *DateTimeFormatUtility) doParseRun(lenTests []int, ftimeStr string) bool {
 
 	lenLenTests := len(lenTests)
 	msg := make(chan ParseDateTimeDto)
@@ -524,7 +549,6 @@ func (dtf *DateTimeFormatUtility) doParseRun(lenTests [] int, ftimeStr string) b
 		go dtf.parseFormatMap(msg, &done, ftimeStr, lenTests[i], dtf.FormatMap[lenTests[i]])
 
 	}
-
 
 	cnt := 0
 
@@ -551,9 +575,8 @@ func (dtf *DateTimeFormatUtility) doParseRun(lenTests [] int, ftimeStr string) b
 
 	}
 
-	return  isSuccessfulParse
+	return isSuccessfulParse
 }
-
 
 func (dtf *DateTimeFormatUtility) parseFormatMap(
 	msg chan<- ParseDateTimeDto, done *uint64, timeStr string, idx int, fmtMap map[string]int) {
@@ -590,7 +613,6 @@ func (dtf *DateTimeFormatUtility) parseFormatMap(
 
 	}
 
-
 	msg <- dto
 	return
 
@@ -625,8 +647,6 @@ func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
 
 	return nil
 }
-
-
 
 func (dtf *DateTimeFormatUtility) assembleMthDayYearFmts() error {
 
@@ -994,7 +1014,6 @@ func (dtf *DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
 	// Standard Dates with Dot Delimiters
 	mthDayYr = append(mthDayYr, "2006.1.2")
 
-
 	mthDayYr = append(mthDayYr, "2-January-2006")
 	mthDayYr = append(mthDayYr, "2-January-06")
 	mthDayYr = append(mthDayYr, "2 January 06")
@@ -1203,7 +1222,6 @@ func (dtf *DateTimeFormatUtility) getEdgeCases() []string {
 	return edgeCases
 }
 
-
 func (dtf *DateTimeFormatUtility) getPreTrimSearchStrings() [][][]string {
 	d := make([][][]string, 0)
 	d = append(d, [][]string{{",", " ", "-1"}})
@@ -1233,7 +1251,7 @@ func (dtf *DateTimeFormatUtility) getTimeFmtRegEx() [][][]string {
 	d = append(d, [][]string{{"\\d\\d:\\d:\\d", "%02d:%02d:%02d"}})       // 2:1:1
 	d = append(d, [][]string{{"\\d:\\d\\d:\\d\\d", "%02d:%02d:%02d"}})    // 1:2:2
 	d = append(d, [][]string{{"\\d:\\d:\\d\\d", "%02d:%02d:%02d"}})       // 1:1:2
-	d = append(d, [][]string{{"\\d:\\d\\d:\\d", "%02d:%02d:%02d"}})    		// 1:2:1
+	d = append(d, [][]string{{"\\d:\\d\\d:\\d", "%02d:%02d:%02d"}})       // 1:2:1
 	d = append(d, [][]string{{"\\d:\\d:\\d", "%02d:%02d:%02d"}})          // 1:1:1
 
 	/*
@@ -1338,7 +1356,7 @@ func (dtf *DateTimeFormatUtility) replaceAMPM(targetStr string) string {
 
 	lD := len(d)
 
-	for i:=0; i < lD; i++ {
+	for i := 0; i < lD; i++ {
 		r, err := regexp.Compile(d[i][0][0])
 
 		if err != nil {
@@ -1355,9 +1373,9 @@ func (dtf *DateTimeFormatUtility) replaceAMPM(targetStr string) string {
 
 		// Found regex expression
 
-		foundEx := string(bTargetStr[loc[0]+1:loc[1]])
+		foundEx := string(bTargetStr[loc[0]+1 : loc[1]])
 
-		return strings.Replace(targetStr,foundEx,d[i][0][1],1)
+		return strings.Replace(targetStr, foundEx, d[i][0][1], 1)
 
 	}
 
@@ -1365,7 +1383,7 @@ func (dtf *DateTimeFormatUtility) replaceAMPM(targetStr string) string {
 }
 
 func (dtf *DateTimeFormatUtility) replaceDateSuffixStThRd(targetStr string) string {
-// \d{1}\s{0,4}(?i)t\s{0,4}(?i)h
+	// \d{1}\s{0,4}(?i)t\s{0,4}(?i)h
 	d := make([][][]string, 0)
 
 	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)s\\s{0,4}(?i)t", " "}})
@@ -1375,7 +1393,7 @@ func (dtf *DateTimeFormatUtility) replaceDateSuffixStThRd(targetStr string) stri
 
 	lD := len(d)
 
-	for i:=0; i < lD; i++ {
+	for i := 0; i < lD; i++ {
 		r, err := regexp.Compile(d[i][0][0])
 
 		if err != nil {
@@ -1392,13 +1410,11 @@ func (dtf *DateTimeFormatUtility) replaceDateSuffixStThRd(targetStr string) stri
 
 		// Found regex expression
 
-		foundEx := string(bTargetStr[loc[0]+1:loc[1]])
+		foundEx := string(bTargetStr[loc[0]+1 : loc[1]])
 
-		return strings.Replace(targetStr,foundEx,d[i][0][1],1)
+		return strings.Replace(targetStr, foundEx, d[i][0][1], 1)
 
 	}
-
-
 
 	return targetStr
 }
@@ -1409,19 +1425,19 @@ func (dtf *DateTimeFormatUtility) replaceDateSuffixStThRd(targetStr string) stri
 // 		of 'trimChar' are reduce to a single instance.
 func (dtf *DateTimeFormatUtility) trimEndMultiple(targetStr string, trimChar rune) (rStr string, err error) {
 
-	if targetStr=="" {
+	if targetStr == "" {
 		err = errors.New("trimEndMultiple() - Empty targetStr")
 		return
 	}
 
 	fStr := []rune(targetStr)
 	lenTargetStr := len(fStr)
-	outputStr := make([]rune,lenTargetStr)
+	outputStr := make([]rune, lenTargetStr)
 	lenTargetStr--
 	idx := lenTargetStr
 	foundFirstChar := false
 
-	for i:=lenTargetStr; i >= 0; i-- {
+	for i := lenTargetStr; i >= 0; i-- {
 
 		if !foundFirstChar && fStr[i] == trimChar {
 			continue
@@ -1431,7 +1447,7 @@ func (dtf *DateTimeFormatUtility) trimEndMultiple(targetStr string, trimChar run
 			continue
 		}
 
-		if i==0 && fStr[i] == trimChar {
+		if i == 0 && fStr[i] == trimChar {
 			continue
 		}
 

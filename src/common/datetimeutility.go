@@ -12,6 +12,11 @@ const (
 	FmtDateTimeNanoSecondStr = "2006-01-02 15:04:05.000000000"
 	// FmtDateTimeSecText - Custom Date Time Format
 	FmtDateTimeSecText = "2006-01-02 15:04:05"
+
+	FmtDateTimeTzNano = "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	FmtDateTimeTzSec = "01/02/2006 15:04:05 -0700 MST"
+
 	// FmtDateTimeEverything - Custom Date Time Format showing virtually
 	// all elements of a date time string.
 	FmtDateTimeEverything = "Monday January 2, 2006 15:04:05.000000000 -0700 MST"

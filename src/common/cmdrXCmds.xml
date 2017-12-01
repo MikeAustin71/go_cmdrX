@@ -6,7 +6,7 @@ Time Zone Info will be taken from Element 'IanaTimeZone'
 -->
 <CommandsBatch>
   <CommandJobsHeader>
-    <Version>2.0</Version>
+    <CmdFileVersion>2.0</CmdFileVersion>
     <LogFileRetentionInDays>0</LogFileRetentionInDays>
     <CommandExeDirectory>.\</CommandExeDirectory>
     <LogPath>./cmdrx</LogPath>
@@ -21,18 +21,16 @@ Time Zone Info will be taken from Element 'IanaTimeZone'
       <CommandType>Console</CommandType>
       <ExecuteCmdInDir></ExecuteCmdInDir>
       <DelayCmdStartSeconds></DelayCmdStartSeconds>
-      <StartCmdDateTime></StartCmdDateTime>
-      <KillJobsOnExitCdeGreaterThan>99</KillJobsOnExitCdeGreaterThan>
-      <KillJobsOnExitCdeLessThan>-99</KillJobsOnExitCdeLessThan>
-      <CmdTimeOutInMinutes>15.0</CmdTimeOutInMinutes>
-      <CmdElements>
-        <CmdElement>cmd.exe</CmdElement>
-        <CmdElement>/c</CmdElement>
-        <CmdElement>robocopy</CmdElement>
-        <CmdElement>D:\T05</CmdElement>
-        <CmdElement>D:\T06</CmdElement>
-        <CmdElement>*.txt</CmdElement>
-      </CmdElements>
+      <DelayStartCmdDateTime></DelayStartCmdDateTime>
+      <CmdTimeOutInSeconds>360</CmdTimeOutInSeconds>
+      <ExeCommand>cmd.exe</ExeCommand>
+      <CmdArguments>
+        <CmdArg>/c</CmdArg>
+        <CmdArg>robocopy</CmdArg>
+        <CmdArg>D:\T05</CmdArg>
+        <CmdArg>D:\T06</CmdArg>
+        <CmdArg>*.txt</CmdArg>
+      </CmdArguments>
     </CommandJob>
     <CommandJob>
       <CommandDisplayName>Copy2</CommandDisplayName>
@@ -40,17 +38,15 @@ Time Zone Info will be taken from Element 'IanaTimeZone'
       <CommandType>Console</CommandType>
       <ExecuteCmdInDir></ExecuteCmdInDir>
       <DelayCmdStartSeconds></DelayCmdStartSeconds>
-      <StartCmdDateTime></StartCmdDateTime>
-      <KillJobsOnExitCdeGreaterThan>99</KillJobsOnExitCdeGreaterThan>
-      <KillJobsOnExitCdeLessThan>-99</KillJobsOnExitCdeLessThan>
-      <CmdTimeOutInMinutes>15.5</CmdTimeOutInMinutes>
-      <CmdElements>
-        <CmdElement>cmd.exe</CmdElement>
-        <CmdElement>/c</CmdElement>
-        <CmdElement>copy</CmdElement>
-        <CmdElement>D:\T06\*.txt</CmdElement>
-        <CmdElement>D:\T07\</CmdElement>
-      </CmdElements>
+      <DelayStartCmdDateTime></DelayStartCmdDateTime>
+      <CmdTimeOutInSeconds>360</CmdTimeOutInSeconds>
+        <ExeCommand>cmd.exe</ExeCommand>
+      <CmdArguments>
+        <CmdArg>/c</CmdArg>
+        <CmdArg>copy</CmdArg>
+        <CmdArg>D:\T06\*.txt</CmdArg>
+        <CmdArg>D:\T07\</CmdArg>
+      </CmdArguments>
     </CommandJob>
   </CommandJobs>
 </CommandsBatch>

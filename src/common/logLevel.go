@@ -1,6 +1,6 @@
 package common
 
-// LogLevel - Holds the message level indicating the relative importance of a specific log message.
+// LogLevel - Holds the Message level indicating the relative importance of a specific log Message.
 type LogLevel int
 
 func (level LogLevel) String() string {
@@ -8,7 +8,7 @@ func (level LogLevel) String() string {
 }
 
 const (
-	// LogDEBUG - message
+	// LogDEBUG - Message
 	LogDEBUG LogLevel = iota
 	// LogOPERROR - 1 Message is an Error Message
 	LogOPERROR

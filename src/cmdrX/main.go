@@ -1,53 +1,67 @@
 package main
 
 import (
-"go_cmdrX/src/common"
-"fmt"
-	"time"
 	"errors"
+	"fmt"
+	"go_cmdrX/src/common"
+	"time"
 )
 
 const (
-	mainSrcFileName = "main.go"
-	mainErrBlockNo  = int64(1000)
+	srcFileNameCmdrX = "main.go"
+	errBlockNoCmdrX  = int64(100000)
 )
-func main()  {
-	xmlFile := "./cmdrXCmds.xml"
 
-	fh, err := common.FileHelper{}.GetPathFileNameElements(xmlFile)
+func main() {
+
+	fh := common.FileHelper{}
+	xmlFilePathName := "D:\\go\\work\\src\\bitbucket.org\\xmlgo\\03_ReadXmlCmds\\common\\cmdrXCmds.xml"
+
+	s, err := fh.MakeAbsolutePath(xmlFilePathName)
 
 	if err != nil {
-		panic(fmt.Errorf("main() - FileHelper{}.GetPathFileNameElements Failed! Xml File: %v - Error: %v",	xmlFile, err.Error()))
+		panic(fmt.Errorf("main() - FileHelper{}.GetPathFileNameElements Failed! Xml File: %v - Error: %v", xmlFilePathName, err.Error()))
 	}
 
-	if !fh.AbsolutePathIsPopulated{
-		panic(fmt.Errorf("main() - FileHelper{}.GetPathFileNameElements Failed! Xml File: %v - Error: Could Not Locate Absolute Path",	xmlFile))
+	xmlFile := fh.AdjustPathSlash(s)
+
+	parent := common.ErrBaseInfo{}.GetNewParentInfo(srcFileNameCmdrX, "main", errBlockNoCmdrX)
+	cmds, se := common.ParseXML(xmlFile, parent)
+
+	if se.IsErr {
+		panic(se)
 	}
 
-	cmds := common.ParseXML(xmlFile)
+	pathElements, err := fh.GetPathFileNameElements(xmlFile)
 
-	noOfCmdJobs :=  len(cmds.CmdJobs.CmdJobArray)
+	if err != nil {
+		panic(fmt.Errorf("main() - FileHelper{}.GetPathFileNameElements Failed! Xml File: %v - Error: %v", xmlFile, err.Error()))
+	}
+
+	if !fh.AbsolutePathIsPopulated {
+		panic(fmt.Errorf("main() - FileHelper{}.GetPathFileNameElements Failed! Xml File: %v - Error: Could Not Locate Absolute Path", xmlFile))
+	}
+
+	noOfCmdJobs := len(cmds.CmdJobs.CmdJobArray)
 
 	if noOfCmdJobs < 1 {
 		panic(errors.New("main() - No command jobs were found!"))
 	}
-
-	common.AssembleCmdElements(&cmds)
 
 	dtf := common.DateTimeFormatUtility{}
 	dtf.CreateAllFormatsInMemory()
 	parms := common.StartupParameters{}
 
 	parms.StartTime = time.Now()
-	parms.AppVersion = cmds.CmdJobsHdr.Version
+	parms.AppVersion = cmds.CmdJobsHdr.CmdFileVersion
 	parms.LogMode = common.LogVERBOSE
 	parms.AppLogFileName = "cmdrXRun"
 	parms.AppLogPath = "./cmdrX"
 	parms.AppName = "cmdrX"
 	parms.AppExeFileName = "cmdrX.exe"
 	parms.NoOfJobs = noOfCmdJobs
-	parms.CommandFileName = fh.FileNameExt
-	parms.AppPath = fh.AbsolutePath
+	parms.CommandFileName = pathElements.FileNameExt
+	parms.AppPath = pathElements.AbsolutePath
 	parms.Dtfmt = &dtf
 	parms.KillAllJobsOnFirstError = cmds.CmdJobsHdr.KillAllJobsOnFirstError
 	parms.IanaTimeZone = cmds.CmdJobsHdr.IanaTimeZone
@@ -55,11 +69,9 @@ func main()  {
 
 	parms.BaseStartDir = fh.AbsolutePath
 
-	parent := common.ErrBaseInfo{}.GetNewParentInfo(mainSrcFileName, "main", mainErrBlockNo)
-
 	logOps := common.LogJobGroup{}
 
-	se := logOps.New(parms, parent)
+	se = logOps.New(parms, parent)
 
 	if se.IsErr {
 		panic(se.Error)
@@ -76,10 +88,11 @@ func main()  {
 
 }
 
-func executeJob( job common.CmdJob, logOps *common.LogJobGroup, parent []common.ErrBaseInfo ) common.SpecErr {
-	se := common.SpecErr{}
+func executeJob(job common.CmdJob, logOps *common.LogJobGroup, parent []common.ErrBaseInfo) common.SpecErr {
 
+	bi := common.ErrBaseInfo{}.New(srcFileNameCmdrX, "executeJob", errBlockNoCmdrX)
+
+	se := common.SpecErr{}.InitializeBaseInfo(parent, bi)
 
 	return se.SignalNoErrors()
 }
-

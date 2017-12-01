@@ -9,7 +9,8 @@ import (
 // NOTE: See https://golang.org/pkg/time/#LoadLocation
 // and https://www.iana.org/time-zones to ensure that
 // the IANA Time Zone Database is properly configured
-// on your system.
+// on your system. Note: IANA Time Zone Data base is
+// equivalent to 'tz database'.
 const (
 	// TzUsEast - USA Eastern Time Zone
 	// IANA database identifier
@@ -38,6 +39,17 @@ const (
 	NeutralDateFmt = "2006-01-02 15:04:05.000000000"
 )
 
+type DateTzDto struct {
+	Year int
+	Month int
+	Day int
+	Hour int
+	Minute int
+	Second int
+	Nanosecond int
+	IANATimeZone string
+}
+
 // TimeZoneUtility - Time Zone Data and Methods
 type TimeZoneUtility struct {
 	Description string
@@ -59,48 +71,36 @@ type TimeZoneUtility struct {
 // input parameter 'tIn' will be converted.
 
 // Output Values are returned in the tzu (TimeZoneUtility)
-// data fields.
-func (tzu *TimeZoneUtility) ConvertTz(tIn time.Time, targetTz string) error {
+// data fields. tzu.TimeOut contains the correct time in the 'target' time
+// zone.
+func (tzu TimeZoneUtility) ConvertTz(tIn time.Time, targetTz string) (TimeZoneUtility, error) {
 
-	isValidTz, _, _ := tzu.IsValidTimeZone(targetTz)
+	tzuOut := TimeZoneUtility{}
 
-	if !isValidTz {
-		return errors.New(fmt.Sprintf("TimeZoneUtility:ConvertTz() Error: targetTz is INVALID!! Input Time Zone == %v", targetTz))
+	if isValidTz, _, _ := tzu.IsValidTimeZone(targetTz); !isValidTz {
+		return tzuOut, errors.New(fmt.Sprintf("TimeZoneUtility:ConvertTz() Error: targetTz is INVALID!! Input Time Zone == %v", targetTz))
 	}
 
 	if tIn.IsZero() {
-		return errors.New("TimeZoneUtility:ConvertTz() Error: Input parameter time, 'tIn' is zero and INVALID")
+		return tzuOut, errors.New("TimeZoneUtility:ConvertTz() Error: Input parameter time, 'tIn' is zero and INVALID")
 	}
 
 	tzOut, err := time.LoadLocation(targetTz)
 
 	if err != nil {
-		return fmt.Errorf("TimeZoneUtility:ConvertTz() - Error Loading Target IANA Time Zone 'targetTz', %v. Errors: %v ", targetTz, err.Error())
+		return tzuOut, fmt.Errorf("TimeZoneUtility:ConvertTz() - Error Loading Target IANA Time Zone 'targetTz', %v. Errors: %v ", targetTz, err.Error())
 	}
 
-	tzu.Empty()
 
-	tzu.SetTimeIn(tIn)
+	tzuOut.SetTimeIn(tIn)
 
-	tzu.SetTimeOut(tIn.In(tzOut))
+	tzuOut.SetTimeOut(tIn.In(tzOut))
 
-	tzu.SetUTCTime(tIn)
+	tzuOut.SetUTCTime(tIn)
 
-	return nil
+	return tzuOut, nil
 }
 
-// Empty - Clears or returns this
-// TimeZoneUtility to an uninitialized
-// state.
-func (tzu *TimeZoneUtility) Empty() {
-	tzu.Description = ""
-	tzu.TimeIn = time.Time{}
-	tzu.TimeInLoc = nil
-	tzu.TimeOut = time.Time{}
-	tzu.TimeOutLoc = nil
-	tzu.TimeUTC = time.Time{}
-
-}
 
 // CopyToThis - Copies another TimeZoneUtility
 // to the current TimeZoneUtility data fields.
@@ -130,6 +130,20 @@ func (tzu *TimeZoneUtility) Equal(tzu2 TimeZoneUtility) bool {
 
 	return true
 }
+
+// Empty - Clears or returns this
+// TimeZoneUtility to an uninitialized
+// state.
+func (tzu *TimeZoneUtility) Empty() {
+	tzu.Description = ""
+	tzu.TimeIn = time.Time{}
+	tzu.TimeInLoc = nil
+	tzu.TimeOut = time.Time{}
+	tzu.TimeOutLoc = nil
+	tzu.TimeUTC = time.Time{}
+
+}
+
 
 // IsValidTimeZone - Tests a Time Zone string and returns three boolean values
 // designating whether the passed Time Zone string is:
@@ -170,6 +184,48 @@ func (tzu *TimeZoneUtility) IsValidTimeZone(tZone string) (isValidTz, isValidIan
 
 }
 
+// MakeDateTz allows one to create a date time object (time.Time) by
+// passing in a DateTzDto structure. Within this structure, the time
+// zone is designated either by the IANA Time Zone (DateTzDto.IANATimeZone)
+// or by the string "Local" which specifies the the time zone local to the
+// user computer.
+//
+// Note: If dtTzDto.IANATimeZone is an empty string, this method will default
+// the time zone to "Local".
+func (tzu *TimeZoneUtility) MakeDateTz(dtTzDto DateTzDto) (time.Time, error) {
+
+	var err error
+	var tzLoc *time.Location
+	tOut := time.Time{}
+
+
+	if dtTzDto.IANATimeZone == "" {
+
+		dtTzDto.IANATimeZone = "Local"
+
+	} else {
+
+
+		if isValid ,_,_ := tzu.IsValidTimeZone(dtTzDto.IANATimeZone); !isValid {
+			return tOut, fmt.Errorf("TimeZoneUtility.MakeDateTz() Invalid Time Zone Error. Tz = %v.", dtTzDto.IANATimeZone )
+
+		}
+	}
+
+	tzLoc, err = time.LoadLocation(dtTzDto.IANATimeZone)
+
+	if err!= nil {
+		return tOut, fmt.Errorf("TimeZoneUtility.MakeDateTz() Error Loading Location! Invalid Time Zone Error. Tz = %v. Error: %v", dtTzDto.IANATimeZone, err.Error())
+	}
+
+	tOut = time.Date(dtTzDto.Year, time.Month(dtTzDto.Month), dtTzDto.Day, dtTzDto.Hour, dtTzDto.Minute, dtTzDto.Second, dtTzDto.Nanosecond, tzLoc)
+
+	return tOut, nil
+}
+
+// ReclassifyTimeWithNewTz - Receives a valid time (time.Time) value and changes the existing time zone
+// to that specified in the 'tZone' parameter. During this time reclassification operation, the time
+// zone is changed but the time value remains unchanged.
 func (tzu *TimeZoneUtility) ReclassifyTimeWithNewTz(tIn time.Time, tZone string) (time.Time, error) {
 	strTime := tzu.TimeWithoutTimeZone(tIn)
 
@@ -179,11 +235,10 @@ func (tzu *TimeZoneUtility) ReclassifyTimeWithNewTz(tIn time.Time, tZone string)
 		return time.Time{}, fmt.Errorf("TimeZoneUtility:ReclassifyTimeWithNewTz() Error: Input Time Zone is INVALID!")
 	}
 
-
 	tzNew, err := time.LoadLocation(tZone)
 
 	if err != nil {
-		return time.Time{}, fmt.Errorf("TimeZoneUtility:ReclassifyTimeWithNewTz() - Error from time.Location('%v') - Error: %v",tZone, err.Error())
+		return time.Time{}, fmt.Errorf("TimeZoneUtility:ReclassifyTimeWithNewTz() - Error from time.Location('%v') - Error: %v", tZone, err.Error())
 	}
 
 	tOut, err := time.ParseInLocation(NeutralDateFmt, strTime, tzNew)

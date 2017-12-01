@@ -1,6 +1,6 @@
 package common
 
-// LogMsgType - Designates type of message being logged
+// LogMsgType - Designates type of Message being logged
 type LogMsgType int
 
 func (mtype LogMsgType) String() string {
