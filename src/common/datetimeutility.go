@@ -4,6 +4,14 @@ import (
 	"time"
 )
 
+/*
+datetimeutility.go is part of the date time operations library. The source code repository
+ 	for this file is located at:
+
+					https://github.com/MikeAustin71/datetimeopsgo.git
+
+ */
+
 const (
 	// FmtDateTimeSecondStr - Date Time format used
 	// for file names and directory names

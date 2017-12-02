@@ -13,6 +13,20 @@ import (
 	"time"
 )
 
+/*
+	datetimeformatUtility.go is part of the date time operations library. The source code repository
+ 	for this file is located at:
+					https://github.com/MikeAustin71/datetimeopsgo.git
+
+	Dependencies:
+		decimal.go
+		intary.go
+		nthroot.go
+		numstrdto.go
+		numstrutility.go
+
+*/
+
 type DateTimeWriteFormatsToFileDto struct {
 	OutputPathFileName             string
 	NumberOfFormatsGenerated       int
@@ -125,7 +139,7 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 	}
 
 	defer fmtFile.Close()
-	const bufLen int = 2000
+	const bufLen  = 2000
 	lastBufIdx := 0
 	var buffer []byte
 	var outRecordBuff []byte

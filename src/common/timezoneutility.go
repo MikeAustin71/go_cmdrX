@@ -6,6 +6,14 @@ import (
 	"time"
 )
 
+/*
+  timezoneutility.go is part of the date time operations library. The source code repository
+ 	for this file is located at:
+
+					https://github.com/MikeAustin71/datetimeopsgo.git
+
+ */
+
 // NOTE: See https://golang.org/pkg/time/#LoadLocation
 // and https://www.iana.org/time-zones to ensure that
 // the IANA Time Zone Database is properly configured

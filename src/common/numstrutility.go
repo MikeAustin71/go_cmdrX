@@ -13,6 +13,16 @@ import (
 	The source code repository for numstrutility.go is located at :
 					https://github.com/MikeAustin71/numstrutility.git
 
+
+
+	Dependencies
+  ************
+
+		decimal.go
+		numstrdto.go
+		intary.go
+		nthroot.go
+
  */
 
 type NumStrUtility struct {

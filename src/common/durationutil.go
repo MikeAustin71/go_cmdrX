@@ -8,6 +8,11 @@ import (
 )
 
 /*
+  The Duration Utilities Library is located in source code repository:
+
+		https://github.com/MikeAustin71/datetimeopsgo.git
+
+
 	The principal component of this library is the DurationUtility. This
 	type plus associated methods is used to manage and control time
 	duration calculations.
