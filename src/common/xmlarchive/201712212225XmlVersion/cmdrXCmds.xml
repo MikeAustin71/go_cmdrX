@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Version: 201712212225
+New xml format for CmdrGo XML Format
+Input All DateTimes using format: '2006-01-02 15:04:05'.
+
+Time Zone Info will be taken from Element 'IanaTimeZone'
+If 'IanaTimeZone' is blank, time zone will default to
+'Local' time zone for the host machine.
+
+-->
+<CommandsBatch>
+  <CommandJobsHeader>
+    <CmdFileVersion>2.0</CmdFileVersion>
+    <LogFileRetentionInDays>0</LogFileRetentionInDays>
+    <CommandExeDirectory>.\</CommandExeDirectory>
+    <LogPath>./cmdrx</LogPath>
+    <LogFileName>cmdsrun.log</LogFileName>
+    <KillAllJobsOnFirstError>true</KillAllJobsOnFirstError>
+    <IanaTimeZone>America/Chicago</IanaTimeZone>
+  </CommandJobsHeader>
+  <CommandJobs>
+    <CommandJob>
+      <CommandDisplayName>Copy1</CommandDisplayName>
+      <CommandDescription>RoboCopy Dir 5 to Dir 6</CommandDescription>
+      <CommandType>Console</CommandType>
+      <ExecuteCmdInDir></ExecuteCmdInDir>
+      <DelayCmdStartSeconds></DelayCmdStartSeconds>
+      <DelayStartCmdDateTime></DelayStartCmdDateTime>
+      <CmdTimeOutInSeconds>360</CmdTimeOutInSeconds>
+      <ExeCommand>cmd.exe</ExeCommand>
+      <CmdArguments>
+        <CmdArg>/c</CmdArg>
+        <CmdArg>robocopy</CmdArg>
+        <CmdArg>D:\T05</CmdArg>
+        <CmdArg>D:\T06</CmdArg>
+        <CmdArg>*.txt</CmdArg>
+      </CmdArguments>
+      <CmdInputs>
+        <InputArg></InputArg>
+      </CmdInputs>
+    </CommandJob>
+    <CommandJob>
+      <CommandDisplayName>Copy2</CommandDisplayName>
+      <CommandDescription>Copy Dir 6 to Dir 7</CommandDescription>
+      <CommandType>Console</CommandType>
+      <ExecuteCmdInDir></ExecuteCmdInDir>
+      <DelayCmdStartSeconds></DelayCmdStartSeconds>
+      <DelayStartCmdDateTime></DelayStartCmdDateTime>
+      <CmdTimeOutInSeconds>360</CmdTimeOutInSeconds>
+        <ExeCommand>cmd.exe</ExeCommand>
+      <CmdArguments>
+        <CmdArg>/c</CmdArg>
+        <CmdArg>copy</CmdArg>
+        <CmdArg>D:\T06\*.txt</CmdArg>
+        <CmdArg>D:\T07\</CmdArg>
+      </CmdArguments>
+      <CmdInputs>
+        <InputArg>Input1</InputArg>
+        <InputArg>Input2</InputArg>
+        <InputArg>Input3</InputArg>
+      </CmdInputs>
+    </CommandJob>
+    <CommandJob>
+      <CommandDisplayName>Copy3</CommandDisplayName>
+      <CommandDescription>Copy Dir 7 to Dir 8</CommandDescription>
+      <CommandType>Console</CommandType>
+      <ExecuteCmdInDir></ExecuteCmdInDir>
+      <DelayCmdStartSeconds></DelayCmdStartSeconds>
+      <DelayStartCmdDateTime></DelayStartCmdDateTime>
+      <CmdTimeOutInSeconds>360</CmdTimeOutInSeconds>
+        <ExeCommand>cmd.exe</ExeCommand>
+      <CmdArguments>
+        <CmdArg>/c</CmdArg>
+        <CmdArg>copy</CmdArg>
+        <CmdArg>D:\T07\*.txt</CmdArg>
+        <CmdArg>D:\T08\</CmdArg>
+        <CmdArg>Arg5XXXXXXXXXXXXXXX</CmdArg>
+        <CmdArg>Arg6XXXXXXXXXXXXXXX</CmdArg>
+        <CmdArg>Arg7XXXXXXXXXXXXXXX</CmdArg>
+        <CmdArg>Arg8XXXXXXXXXXXXXXX</CmdArg>
+        <CmdArg>Arg9XXXXXXXXXXXXXXX</CmdArg>
+        <CmdArg>Arg10XXXXXXXXXXXXXXX</CmdArg>
+      </CmdArguments>
+      <CmdInputs>
+        <InputArg>Input1XXXXXXXXXXXX</InputArg>
+        <InputArg>Input2XXXXXXXXXXXX</InputArg>
+        <InputArg>Input3XXXXXXXXXXXX</InputArg>
+        <InputArg>Input4XXXXXXXXXXXX</InputArg>
+        <InputArg>Input5XXXXXXXXXXXX</InputArg>
+        <InputArg>Input6XXXXXXXXXXXX</InputArg>
+        <InputArg>Input7XXXXXXXXXXXX</InputArg>
+        <InputArg>Input8XXXXXXXXXXXX</InputArg>
+        <InputArg>Input9XXXXXXXXXXXX</InputArg>
+      </CmdInputs>
+    </CommandJob>
+  </CommandJobs>
+</CommandsBatch>
