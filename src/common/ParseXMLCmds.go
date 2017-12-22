@@ -7,28 +7,42 @@ import (
 	"os"
 )
 
+/*  'ParseXMLCmds.go' is located in source code
+		repository:
+
+		https://github.com/MikeAustin71/go_cmdrX.git
+
+*/
+
+
 const (
-	parseXMLSrcFile    = "main.go"
+	parseXMLSrcFile    = "ParseXMLCmds.go"
 	parseSMLErrBlockNo = int64(219610000)
 )
 
 // ParseXML - Reads and Parses command
 // data from an XML file.
-func ParseXML(xmlPathFileName string, parent []ErrBaseInfo) (CommandBatch, SpecErr) {
-	var isPanic bool
+func ParseXML(xmlPathFileName string, parent []OpsMsgContextInfo) (CommandBatch, OpsMsgDto) {
 
-	bi := ErrBaseInfo{}.New(parseXMLSrcFile, "ParseXML", parseSMLErrBlockNo)
+	//bi := ErrBaseInfo{}.New(parseXMLSrcFile, "ParseXML", parseSMLErrBlockNo)
+	msgCtx := OpsMsgContextInfo{
+						SourceFileName: parseXMLSrcFile,
+						ParentObjectName:"",
+						FuncName:"ParseXML",
+						BaseMessageId: parseSMLErrBlockNo,
+						}
 
-	se := SpecErr{}.InitializeBaseInfo(parent, bi)
+
+	om := OpsMsgDto{}.InitializeAllContextInfo(parent, msgCtx)
 
 	var cmds CommandBatch
 
 	xmlFile, err1 := os.Open(xmlPathFileName)
 
 	if err1 != nil {
-		isPanic = true
 		s := fmt.Sprintf("File Name: %v  - Error opening file: %v", xmlPathFileName, err1.Error())
-		return cmds, se.New(s, err1, isPanic, 1005)
+		om.SetFatalError(s, err1, 1005)
+		return cmds, om
 	}
 
 	defer xmlFile.Close()
@@ -36,12 +50,13 @@ func ParseXML(xmlPathFileName string, parent []ErrBaseInfo) (CommandBatch, SpecE
 	b, err2 := ioutil.ReadAll(xmlFile)
 
 	if err2 != nil {
-		isPanic = true
 		s := fmt.Sprintf("Error Reading XML File: %v. Error - %v", xmlPathFileName, err2.Error())
-		return cmds, se.New(s, err2, isPanic, 1006)
+		om.SetFatalError(s,err2,1006)
+		return cmds, om
 	}
 
 	xml.Unmarshal(b, &cmds)
 
-	return cmds, se.SignalNoErrors()
+	om.SetSuccessfulCompletionMessage("Finished Function: ParseXML", 1009)
+	return cmds, om
 }

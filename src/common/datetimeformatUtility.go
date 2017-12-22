@@ -17,14 +17,6 @@ import (
 	datetimeformatUtility.go is part of the date time operations library. The source code repository
  	for this file is located at:
 					https://github.com/MikeAustin71/datetimeopsgo.git
-
-	Dependencies:
-		decimal.go
-		intary.go
-		nthroot.go
-		numstrdto.go
-		numstrutility.go
-
 */
 
 type DateTimeWriteFormatsToFileDto struct {

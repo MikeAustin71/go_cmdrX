@@ -61,3 +61,7 @@ _cgo_export.*
 ehthumbs.db
 Icon?
 Thumbs.db
+
+# Exceptions #
+##############
+!cmdrX.exe

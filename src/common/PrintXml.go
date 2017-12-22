@@ -1,5 +1,12 @@
 package common
 
+/*  'PrintXml.go' is located in source code
+		repository:
+
+		https://github.com/MikeAustin71/go_cmdrX.git
+
+*/
+
 import "fmt"
 
 const (
@@ -11,11 +18,29 @@ const (
 // by reading XML file
 func PrintXML(cmds CommandBatch) {
 
+	msgCtx := OpsMsgContextInfo{
+							SourceFileName: srcFileNamePrintXml,
+							ParentObjectName: "",
+							FuncName: "PrintXML",
+							BaseMessageId: errBlockNoPrintXml,
+						}
+
+  parentHistory := []OpsMsgContextInfo{msgCtx}
+
 	fmt.Println("=======================================")
 	fmt.Println("Command Data from XML File")
 
-	PrintCmdJobsHdr(cmds.CmdJobsHdr)
-	PrintCmdJobs(cmds.CmdJobs)
+	om1 := PrintCmdJobsHdr(cmds.CmdJobsHdr, parentHistory)
+
+	if om1.IsFatalError() {
+		panic(om1)
+	}
+
+	om2 := PrintCmdJobs(cmds.CmdJobs, parentHistory)
+
+	if om2.IsFatalError() {
+		panic(om2)
+	}
 
 	return
 }
@@ -23,7 +48,16 @@ func PrintXML(cmds CommandBatch) {
 // PrintCmdJobsHdr - Prints the Command
 // Jobs Header info from CommandBatch
 // structure
-func PrintCmdJobsHdr(hdr CommandJobsHdr) {
+func PrintCmdJobsHdr(hdr CommandJobsHdr, parentHistory []OpsMsgContextInfo) OpsMsgDto {
+
+	msgCtx := OpsMsgContextInfo{
+							SourceFileName: srcFileNamePrintXml,
+							ParentObjectName: "",
+							FuncName: "PrintCmdJobsHdr",
+							BaseMessageId: errBlockNoPrintXml,
+						}
+
+	om := OpsMsgDto{}.InitializeAllContextInfo(parentHistory, msgCtx)
 
 	fmt.Println("=======================================")
 	fmt.Println("CmdJobsHdr")
@@ -35,14 +69,23 @@ func PrintCmdJobsHdr(hdr CommandJobsHdr) {
 	fmt.Println("No Of Command Jobs:", hdr.NoOfCmdJobs)
 	fmt.Println("Command Batch Start Time: ", hdr.CmdBatchStartTime.Format(hdr.StdTimeFormat))
 
-	return
+	om.SetSuccessfulCompletionMessage("", 9)
+	return om
 }
 
 // PrintCmdJobs - Prints All Command Jobs
-func PrintCmdJobs(cmdJobs CommandJobArray) {
+func PrintCmdJobs(cmdJobs CommandJobArray, parentHistory []OpsMsgContextInfo) OpsMsgDto {
 
-	parent := ErrBaseInfo{}.GetNewParentInfo(srcFileNamePrintXml, "CommandJobArray", errBlockNoPrintXml)
+	msgCtx := OpsMsgContextInfo{
+							SourceFileName: srcFileNamePrintXml,
+							ParentObjectName: "",
+							FuncName: "PrintCmdJobs",
+							BaseMessageId: errBlockNoPrintXml,
+						}
 
+	om := OpsMsgDto{}.InitializeAllContextInfo(parentHistory, msgCtx)
+
+	thisParentHistory := om.GetNewParentHistory()
 
 	fmt.Println("=======================================")
 
@@ -50,12 +93,13 @@ func PrintCmdJobs(cmdJobs CommandJobArray) {
 	fmt.Println("=======================================")
 
 	lJobs := len(cmdJobs.CmdJobArray)
+
 	for i := 0; i < lJobs; i++ {
 
-		se := cmdJobs.CmdJobArray[i].SetCmdJobActualStartTime(parent)
+		om2 := cmdJobs.CmdJobArray[i].SetCmdJobActualStartTime(thisParentHistory)
 
-		if se.IsErr {
-			panic(se)
+		if om2.IsFatalError() {
+			panic(om2)
 		}
 
 		fmt.Println("Display Name:", cmdJobs.CmdJobArray[i].CmdDisplayName)
@@ -75,12 +119,25 @@ func PrintCmdJobs(cmdJobs CommandJobArray) {
 		fmt.Println("           Exe Command                 ")
 		fmt.Println("---------------------------------------")
 		fmt.Println("ExeCommand:", cmdJobs.CmdJobArray[i].ExeCommand)
-		PrintCmdElements(cmdJobs.CmdJobArray[i].CmdArguments)
+		PrintCmdElements(cmdJobs.CmdJobArray[i].CmdArguments, thisParentHistory)
 	}
+
+	om.SetSuccessfulCompletionMessage("", 99)
+	return om
 }
 
 // PrintCmdElements - Prints Command Elements Array
-func PrintCmdElements(CmdArguments CommandArgumentsArray) {
+func PrintCmdElements(CmdArguments CommandArgumentsArray, parentHistory []OpsMsgContextInfo) OpsMsgDto {
+
+	msgCtx := OpsMsgContextInfo{
+							SourceFileName: srcFileNamePrintXml,
+							ParentObjectName: "",
+							FuncName: "PrintCmdJobs",
+							BaseMessageId: errBlockNoPrintXml,
+						}
+
+	om := OpsMsgDto{}.InitializeAllContextInfo(parentHistory, msgCtx)
+
 	fmt.Println("---------------------------------------")
 	fmt.Println("         Command Arguments             ")
 	fmt.Println("---------------------------------------")
@@ -90,4 +147,8 @@ func PrintCmdElements(CmdArguments CommandArgumentsArray) {
 
 	fmt.Println("=======================================")
 
+
+	om.SetSuccessfulCompletionMessage("", 999)
+
+	return om
 }

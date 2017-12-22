@@ -5,6 +5,14 @@ import (
 	"fmt"
 )
 
+/*  'startupparameters.go' is located in source code
+		repository:
+
+		https://github.com/MikeAustin71/go_cmdrX.git
+
+*/
+
+
 const (
 	srcFileNameStartUpParms = "startupparameters.go"
 	errBlockNoStartUpParms  = int64(351230000)
@@ -34,8 +42,9 @@ type StartupParameters struct {
 }
 
 
-func (sUp * StartupParameters) AssembleAppPath(appPathAndFileName string, parent []ErrBaseInfo) (FileHelper, SpecErr) {
-	se := startUpBaseErrConfig(parent, "AssembleAppPath")
+func (sUp *StartupParameters) AssembleAppPath(appPathAndFileName string, parentHistory [] OpsMsgContextInfo) (FileHelper, OpsMsgDto) {
+
+	om := sUp.startUpBaseErrConfig(parentHistory, "AssembleAppPath")
 
 	fh := FileHelper{}
 
@@ -45,41 +54,48 @@ func (sUp * StartupParameters) AssembleAppPath(appPathAndFileName string, parent
 	
 	if err != nil {
 		s := fmt.Sprintf("sUp.AssembleAppPath() Error. fh.MakeAbsolutePath() Failed! App File Path = %v", appPathAndFileName)
-		return FileHelper{}, se.New(s, err, true, 101)
+		om.SetFatalError(s, err, 101)
+		return FileHelper{}, om
 		
 	}
 
 	if !fh.DoesFileExist(appP)  {
 		s := fmt.Sprintf("sUp.AssembleAppPath() Error. App File Path = %v Does NOT EXIST!", appP)
 		e := fmt.Errorf("Error. File: %v DOES NOT EXIST!", appP)
-		return FileHelper{}, se.New(s, e, true, 102)
+		om.SetFatalError(s, e, 102)
+		return FileHelper{}, om
 	}
 
 	fh2, err := fh.GetPathFileNameElements(appP)
 
 	if err != nil {
 		s:= fmt.Sprintf("sUp.AssembleAppPath() Error - Failed to Get Path File Name Elements for App File: %v.", appPathAndFileName)
-		return FileHelper{}, se.New(s, err, true, 103)
+		om.SetFatalError(s, err, 103)
+		return FileHelper{}, om
 	}
 
 	if !fh2.AbsolutePathIsPopulated {
 		s:= fmt.Sprintf("sUp.AssembleAppPath() Error - Failed to Populate Absolute Path for App File: %v.", appP)
 		e:= fmt.Errorf("Absolute App Path is NOT Populated! App Path File Name = %v", appPathAndFileName)
-		return FileHelper{}, se.New(s, e, true, 104)
+		om.SetFatalError(s, e, 104)
+		return FileHelper{}, om
 	}
 
 	if !fh2.FileNameExtIsPopulated {
 		s:= fmt.Sprintf("sUp.AssembleAppPath() Error - Failed to Populate File Name and Extension Path for App File: %v.", appP)
 		e:= fmt.Errorf("File Name and Extension is NOT Populated! App Path File Name = %v", appPathAndFileName)
-		return FileHelper{}, se.New(s, e, true, 105)
+		om.SetFatalError(s, e, 105)
+		return FileHelper{}, om
 	}
 
-	return fh2, se.SignalNoErrors()
+	om.SetSuccessfulCompletionMessage("Finished AssembleAppPath Setup", 109)
+
+	return fh2, om
 }
 
-func (sUp * StartupParameters) AssembleCmdPath(cmdPathAndFileName string, parent []ErrBaseInfo) (FileHelper, SpecErr) {
+func (sUp * StartupParameters) AssembleCmdPath(cmdPathAndFileName string, parent []OpsMsgContextInfo) (FileHelper, OpsMsgDto) {
 
-	se := startUpBaseErrConfig(parent, "AssembleCmdPath")
+	om := sUp.startUpBaseErrConfig(parent, "AssembleCmdPath")
 
 	fh := FileHelper{}
 
@@ -89,41 +105,48 @@ func (sUp * StartupParameters) AssembleCmdPath(cmdPathAndFileName string, parent
 
 	if err != nil {
 		s := fmt.Sprintf("sUp.AssembleCmdPath() Error. fh.MakeAbsolutePath() Failed! Cmd File Path = %v", cmdPathAndFileName)
-		return FileHelper{}, se.New(s, err, true, 201)
+		om.SetFatalError(s, err, 201)
+		return FileHelper{}, om
 
 	}
 
 	if !fh.DoesFileExist(cmdPath)  {
 		s := fmt.Sprintf("sUp.AssembleCmdPath() Error. Cmd File Path = %v Does NOT EXIST!", cmdPath)
 		e := fmt.Errorf("Error. Cmd File: %v DOES NOT EXIST!", cmdPath)
-		return FileHelper{}, se.New(s, e, true, 202)
+		om.SetFatalError(s, e, 202)
+		return FileHelper{}, om
 	}
 
 	fh2, err := fh.GetPathFileNameElements(cmdPath)
 
 	if err != nil {
 		s:= fmt.Sprintf("sUp.AssembleCmdPath() Error - Failed to Get Path File Name Elements for Cmd File: %v.", cmdPathAndFileName)
-		return FileHelper{}, se.New(s, err, true, 203)
+		om.SetFatalError(s, err, 203)
+		return FileHelper{}, om
 	}
 
 	if !fh2.AbsolutePathIsPopulated {
 		s:= fmt.Sprintf("sUp.AssembleCmdPath() Error - Failed to Populate Absolute Path for Cmd File: %v.", cmdPath)
 		e:= fmt.Errorf("Absolute App Path is NOT Populated! App Path File Name = %v", cmdPathAndFileName)
-		return FileHelper{}, se.New(s, e, true, 204)
+		om.SetFatalError(s, e, 204)
+		return FileHelper{}, om
 	}
 
 	if !fh2.FileNameExtIsPopulated {
 		s:= fmt.Sprintf("sUp.AssembleCmdPath() Error - Failed to Populate File Name and Extension Path for Cmd File: %v.", cmdPath)
 		e:= fmt.Errorf("File Name and Extension is NOT Populated! App Path File Name = %v", cmdPathAndFileName)
-		return FileHelper{}, se.New(s, e, true, 205)
+		om.SetFatalError(s, e, 205)
+		return FileHelper{}, om
 	}
 
-	return fh2, se.SignalNoErrors()
+	om.SetSuccessfulCompletionMessage("Finished AssembleCmdPath", 209)
+
+	return fh2, om
 }
 
-func (sUp * StartupParameters) AssembleLogPath(lgPath string, parent []ErrBaseInfo) (FileHelper, SpecErr) {
+func (sUp *StartupParameters) AssembleLogPath(lgPath string, parent []OpsMsgContextInfo) (FileHelper, OpsMsgDto) {
 
-	se := startUpBaseErrConfig(parent, "AssembleLogPath")
+	om := sUp.startUpBaseErrConfig(parent, "AssembleLogPath")
 
 	fh := FileHelper{}
 
@@ -133,30 +156,41 @@ func (sUp * StartupParameters) AssembleLogPath(lgPath string, parent []ErrBaseIn
 
 	if err != nil {
 		s := fmt.Sprintf("sUp.AssembleCmdPath() Error. fh.MakeAbsolutePath() Failed! App File Path = %v", lgPath)
-		return FileHelper{}, se.New(s, err, true, 301)
+		om.SetFatalError(s, err, 301)
+		return FileHelper{}, om
 	}
 
 	fh2, err := fh.GetPathFileNameElements(logPath)
 
 	if err != nil {
 		s:= fmt.Sprintf("sUp.AssembleCmdPath() Error - Failed to Get Path lements for Log File Path: %v.", lgPath)
-		return FileHelper{}, se.New(s, err, true, 302)
+		om.SetFatalError(s, err, 302)
+		return FileHelper{}, om
 	}
 
 	if !fh2.AbsolutePathIsPopulated {
 		s:= fmt.Sprintf("sUp.AssembleCmdPath() Error - Failed to Populate Absolute Path for Cmd File: %v.", lgPath)
 		e:= fmt.Errorf("Absolute App Path is NOT Populated! App Path File Name = %v", logPath)
-		return FileHelper{}, se.New(s, e, true, 303)
+		om.SetFatalError(s, e, 303)
+		return FileHelper{}, om
 	}
 
-	return fh2, se.SignalNoErrors()
+	om.SetSuccessfulCompletionMessage("Finished AssembleLogPath", 309)
+
+	return fh2, om
 }
 
 // baseLogErrConfig - Used internally by LogJobGroup
 // methods to set up error messages.
-func startUpBaseErrConfig(parent []ErrBaseInfo, funcName string) SpecErr {
+func (sUp *StartupParameters) startUpBaseErrConfig(parent []OpsMsgContextInfo, funcName string) OpsMsgDto {
 
-	bi := ErrBaseInfo{}.New(srcFileNameStartUpParms, funcName, errBlockNoStartUpParms)
+	// bi := ErrBaseInfo{}.New(srcFileNameStartUpParms, funcName, errBlockNoStartUpParms)
+	msgCtx := OpsMsgContextInfo{
+							SourceFileName: srcFileNameStartUpParms,
+							ParentObjectName: "StartupParameters",
+							FuncName: funcName,
+							BaseMessageId: errBlockNoStartUpParms,
+						}
 
-	return SpecErr{}.InitializeBaseInfo(parent, bi)
+	return OpsMsgDto{}.InitializeAllContextInfo(parent, msgCtx)
 }

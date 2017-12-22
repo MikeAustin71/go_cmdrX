@@ -1,5 +1,12 @@
 package common
 
+/*  'loggingmode.go' is located in source code
+		repository:
+
+		https://github.com/MikeAustin71/logopsgo.git
+
+ */
+
 // LoggingMode - Holds Logging mode
 type LoggingMode int
 

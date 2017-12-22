@@ -20,14 +20,22 @@ func TestLogJobGroupConfig_New(t *testing.T) {
 	parms.NoOfJobs = 37
 	parms.CommandFileName = "CmdrX.xml"
 
-	parent := ErrBaseInfo{}.GetNewParentInfo(thisSrcFileName, thisMethodName, thisErrBlockNo)
+	//parent := ErrBaseInfo{}.GetNewParentInfo(thisSrcFileName, thisMethodName, thisErrBlockNo)
+	msgCtx := OpsMsgContextInfo{
+							SourceFileName: thisSrcFileName,
+							ParentObjectName: "",
+							FuncName: thisMethodName,
+							BaseMessageId: thisErrBlockNo,
+						}
+
+	parentHistory := []OpsMsgContextInfo{msgCtx}
 
 	lg := LogJobGroup{}
 
-	se := lg.New(parms, parent)
+	om := lg.New(parms, parentHistory)
 
-	if se.IsErr {
-		t.Error("Expected se.IsErr == false, got", se.IsErr)
+	if om.IsError() {
+		t.Errorf("Expected om.IsError() == false, got %v", om.IsError())
 	}
 
 	if parms.CommandFileName != lg.CommandFileName {

@@ -16,13 +16,32 @@ const (
 	// FmtDateTimeSecondStr - Date Time format used
 	// for file names and directory names
 	FmtDateTimeSecondStr = "20060102150405"
+	
 	// FmtDateTimeNanoSecondStr - Custom Date Time Format
 	FmtDateTimeNanoSecondStr = "2006-01-02 15:04:05.000000000"
+	
 	// FmtDateTimeSecText - Custom Date Time Format
 	FmtDateTimeSecText = "2006-01-02 15:04:05"
 
+	// FmtDateTimeTzNano - Outputs date time to nano seconds with associated time zone
 	FmtDateTimeTzNano = "01/02/2006 15:04:05.000000000 -0700 MST"
 
+	// FmtDateTimeTzNanoYMD - Outputs date time to nano seconds with Year-Month-Date
+	FmtDateTimeTzNanoYMD = "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	// FmtDateTimeTzNanoDowYMD - Output date time to nano seconds with Year-Month-Date
+	// prefixed by day of the week
+	FmtDateTimeTzNanoDowYMD = "Monday 2006-01-02 15:04:05.000000000 -0700 MST"
+
+	// FmtDateTimeTzNanoDowYMD - Output date time to nano seconds with Year-Month-Date
+	// prefixed by day of the week
+	FmtDateTimeTzNanoYMDDow = "2006-01-02 Monday 15:04:05.000000000 -0700 MST"
+
+	// FmtDateTimeYMDAbbrvDowNano - Output date time to nano seconds with abbreviated
+	// day of week. 
+  FmtDateTimeYMDAbbrvDowNano = "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
+	
+	// FmtDateTimeTzSec - Outputs date time to seconds with associated time zone
 	FmtDateTimeTzSec = "01/02/2006 15:04:05 -0700 MST"
 
 	// FmtDateTimeEverything - Custom Date Time Format showing virtually
@@ -77,9 +96,55 @@ func (dt DateTimeUtility) GetDateTimeNanoSecText(t time.Time) string {
 	return t.Format(FmtDateTimeNanoSecondStr)
 }
 
+// GetDateTimeTzNanoSecText - Outputs date time in string format using
+// the FmtDateTimeTzNano format which incorporates date time to nano seconds
+// and the associated time zone.
+// EXAMPLE: 01/02/2006 15:04:05.000000000 -0700 MST
+func (dt DateTimeUtility) GetDateTimeTzNanoSecText(t time.Time) string {
+	return t.Format(FmtDateTimeTzNano)
+}
+
+// GetDateTimeTzNanoSecYMDText - Outputs date time in string format using
+// the FmtDateTimeTzNanoYMD format which incorporates date time to nano seconds
+// and the associated time zone. In this format, the date is expressed as
+// Year-Month-Day (Example: 2017-12-06)
+// EXAMPLE: 2006-01-02 15:04:05.000000000 -0700 MST
+func (dt DateTimeUtility) GetDateTimeTzNanoSecYMDText(t time.Time) string {
+	return t.Format(FmtDateTimeTzNanoYMD)
+}
+
+// GetDateTimeTzNanoSecDowYMDText - Outputs date time in string format using
+// the FmtDateTimeTzNanoDowYMD format which incorporates date time to the
+// nano second and the associated time zone. In this format, the date is
+// expressed as Year-Month-Day (Example: 2017-12-06). The string is
+// prefixed with the day of the week:
+// EXAMPLE: Monday 2006-01-02 15:04:05.000000000 -0700 MST
+func (dt DateTimeUtility) GetDateTimeTzNanoSecDowYMDText(t time.Time) string {
+	return t.Format(FmtDateTimeTzNanoDowYMD)
+}
+
+// FmtDateTimeYMDAbbrvDowNano - Outputs date time in string format using
+// the FmtDateTimeYMDAbbrvDowNano format which incorporates date time to the
+// nano second and the associated time zone. In this format, the date is
+// expressed as Year-Month-Day (Example: 2017-12-06). The string includes
+// the abbreviated (limited to 3-characters) day of the week:
+// EXAMPLE: "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
+func (dt DateTimeUtility) GetDateTimeYMDAbbrvDowNano(t time.Time) string {
+	return t.Format(FmtDateTimeYMDAbbrvDowNano)
+}
+
+// GetDateTimeTzNanoSecYMDDowText - Outputs date time in string format using
+// the FmtDateTimeTzNanoYMDDow format which incorporates date time to nano seconds
+// and the associated time zone. In this format, the date is expressed as
+// Year-Month-Day (Example: 2017-12-06) followed by the day of the week.
+// EXAMPLE: 2006-01-02 Monday 15:04:05.000000000 -0700 MST
+func (dt DateTimeUtility) GetDateTimeTzNanoSecYMDDowText(t time.Time) string {
+	return t.Format(FmtDateTimeTzNanoYMDDow)
+}
+
 // GetDateTimeEverything - Receives a time value and formats as
 // a date time string in the format:
-//  Saturday April 29, 2017 19:54:30.123456489 -0500 CDT
+// EXAMPLE: Saturday April 29, 2017 19:54:30.123456489 -0500 CDT
 func (dt DateTimeUtility) GetDateTimeEverything(t time.Time) string {
 	return t.Format(FmtDateTimeEverything)
 }

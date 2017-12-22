@@ -11,6 +11,11 @@ import (
 	"time"
 )
 
+/*
+This source code file is located in the source code repository:
+https://github.com/MikeAustin71/pathfilego.git
+*/
+
 type FileWalkInfo struct {
 	Path string
 	Info os.FileInfo

@@ -1,5 +1,12 @@
 package common
 
+/*  'logLevel.go' is located in source code
+		repository:
+
+		https://github.com/MikeAustin71/logopsgo.git
+
+ */
+
 // LogLevel - Holds the Message level indicating the relative importance of a specific log Message.
 type LogLevel int
 
