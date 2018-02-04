@@ -1,0 +1,30 @@
+################################################################################
+################################################################################
+                      App Name: cmdrX  AppVersion: 2.0.0 
+################################################################################
+               Execution Job Group Command File: cmdrXCmds.xml 
+                        Starting Execution of 0 Jobs. 
+================================================================================
+  Job Group Start Time UTC: 2018-02-04 Sun 23:32:39.227592500 +0000 UTC 
+Job Group Start Time Local: 2018-02-04 Sun 17:32:39.227592500 -0600 CST 
+ Job Group Local Time Zone: Local - CST 
+********************************************************************************
+  This Application Executable File:
+    D:\go\work\src\go_cmdrX\src\windows\app\cmdrX.exe
+
+  This Log File:
+    D:\go\work\src\go_cmdrX\src\windows\common\cmdrXLog\cmdrX_20180204173239.log
+
+  Command File:
+    D:\go\work\src\go_cmdrX\src\windows\app\cmdrXCmds.xml
+
+  Initial Application Path: 
+    D:\go\work\src\go_cmdrX\src\windows\app
+
+  Base Start Directory:
+    D:\go\work\src\go_cmdrX\src\windows\app
+
+********************************************************************************
+  Number Of Old Log Files Deleted: 0 
+################################################################################
+################################################################################

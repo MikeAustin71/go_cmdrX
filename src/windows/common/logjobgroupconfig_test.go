@@ -16,6 +16,7 @@ func TestLogJobGroupConfig_New(t *testing.T) {
 	lg.CmdPathFileNameExt, _ = FileMgr{}.New("../app/cmdrXCmds.xml")
 	lg.AppStartTimeTzu, _ = TimeZoneUtility{}.New(time.Now().UTC(), "Local")
 	lg.BatchStartTimeTzu, _ = TimeZoneUtility{}.New(lg.AppStartTimeTzu.TimeUTC, "Local")
+	lg.IanaTimeZone = "Local"
 	lg.AppVersion = "2.0.0"
 	lg.LogMode = LogVERBOSE
 	dt := DateTimeUtility{}
