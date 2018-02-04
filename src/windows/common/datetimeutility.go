@@ -33,7 +33,7 @@ const (
 	// prefixed by day of the week
 	FmtDateTimeTzNanoDowYMD = "Monday 2006-01-02 15:04:05.000000000 -0700 MST"
 
-	// FmtDateTimeTzNanoDowYMD - Output date time to nano seconds with Year-Month-Date
+	// FmtDateTimeTzNanoYMDDow - Output date time to nano seconds with Year-Month-Date
 	// prefixed by day of the week
 	FmtDateTimeTzNanoYMDDow = "2006-01-02 Monday 15:04:05.000000000 -0700 MST"
 
@@ -123,7 +123,7 @@ func (dt DateTimeUtility) GetDateTimeTzNanoSecDowYMDText(t time.Time) string {
 	return t.Format(FmtDateTimeTzNanoDowYMD)
 }
 
-// FmtDateTimeYMDAbbrvDowNano - Outputs date time in string format using
+// GetDateTimeYMDAbbrvDowNano - Outputs date time in string format using
 // the FmtDateTimeYMDAbbrvDowNano format which incorporates date time to the
 // nano second and the associated time zone. In this format, the date is
 // expressed as Year-Month-Day (Example: 2017-12-06). The string includes
@@ -155,4 +155,25 @@ func (dt DateTimeUtility) GetDateTimeEverything(t time.Time) string {
 // 'Monday January 2, 2006 15:04:05.000000000 -0700 MST'
 func (dt DateTimeUtility) GetDateTimeCustomFmt(t time.Time, fmt string) string {
 	return t.Format(fmt)
+}
+
+
+// GetTimeStampEverything - Generates and returns a time stamp as
+// type string. The current time is computed using time.Now() for the
+// 'Local' timezone on the host machine. The time stamp is formatted
+// using the format, 'FmtDateTimeEverything'. Example output:
+// "Saturday April 29, 2017 19:54:30.123456489 -0500 CDT"
+func (dt DateTimeUtility) GetTimeStampEverything() string {
+	return time.Now().Local().Format(FmtDateTimeEverything)
+}
+
+// GetTimeStampYMDAbbrvDowNano - Generates and returns a time stamp as
+// type string. The current time is computed using time.Now() for the
+// 'Local' timezone on the host machine. The time stamp is formatted
+// using the format 'FmtDateTimeYMDAbbrvDowNano'. Example output:
+// "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
+func (dt DateTimeUtility) GetTimeStampYMDAbbrvDowNano() string {
+
+	return time.Now().Local().Format(FmtDateTimeYMDAbbrvDowNano)
+
 }

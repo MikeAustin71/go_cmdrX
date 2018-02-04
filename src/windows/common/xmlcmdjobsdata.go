@@ -121,6 +121,10 @@ func (cmdBatch *CommandBatch) assembleCmdElements(parentHistory []OpsMsgContextI
 			return omx
 		}
 
+		if job.ExeCmdInDir == "" {
+			job.ExeCmdInDir = "Current CmdrX.exe Directory"
+		}
+
 		omy := cmdBatch.assembleInputArgs(job, om.GetNewParentHistory())
 
 		if omy.IsError() {
@@ -243,7 +247,7 @@ func (cmdBatch *CommandBatch) assembleInputArgs(job *CmdJob, parentHistory []Ops
 
 // SetBatchStartTime - Sets the time at which jobs in this
 // Command Batch began processing.
-func (cmdBatch *CommandBatch) SetBatchStartTime(parent []OpsMsgContextInfo) OpsMsgDto {
+func (cmdBatch *CommandBatch) SetBatchStartTime(appStartTime TimeZoneUtility, parent []OpsMsgContextInfo) OpsMsgDto {
 
 	msgCtx := OpsMsgContextInfo{
 							SourceFileName: srcFileNameXMLCmdJobsData,
@@ -254,9 +258,17 @@ func (cmdBatch *CommandBatch) SetBatchStartTime(parent []OpsMsgContextInfo) OpsM
 
 	om := OpsMsgDto{}.InitializeAllContextInfo(parent, msgCtx)
 
-	cmdBatch.CmdJobsHdr.CmdBatchStartUTC = time.Now().UTC()
+	cmdBatch.CmdJobsHdr.CmdBatchStartUTC = appStartTime.TimeUTC
 
-	tzu, err := TimeZoneUtility{}.ConvertTz(cmdBatch.CmdJobsHdr.CmdBatchStartUTC, cmdBatch.CmdJobsHdr.IanaTimeZone)
+	tzxu := TimeZoneUtility{}
+
+	isValidTz, _, _ :=tzxu.IsValidTimeZone(cmdBatch.CmdJobsHdr.IanaTimeZone)
+
+	if !isValidTz {
+		cmdBatch.CmdJobsHdr.IanaTimeZone = "Local"
+	}
+
+	tzu, err := TimeZoneUtility{}.New(cmdBatch.CmdJobsHdr.CmdBatchStartUTC, cmdBatch.CmdJobsHdr.IanaTimeZone)
 
 	if err != nil {
 		s:= fmt.Sprintf("TimeZoneUtility{}.ConvertTz Error - Failed to convert UTC to local Time Zone. Start UTC: %v. Iana Time Zone: %v", cmdBatch.CmdJobsHdr.CmdBatchStartUTC, cmdBatch.CmdJobsHdr.IanaTimeZone)
@@ -377,7 +389,9 @@ type CmdJob struct {
 	CmdJobDuration             time.Duration
 	CmdJobElapsedTime          string
 	CmdJobNoOfMsgs						 int
+	CmdJobNoOfErrorMsgs				 int
 	CmdJobIsCompleted					 bool
+	CmdJobExecutionStatus			 string
 }
 
 // SetDelayCmdStartTime - Sets the date time at which the command

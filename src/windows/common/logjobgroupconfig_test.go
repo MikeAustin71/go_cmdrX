@@ -1,24 +1,32 @@
 package common
 
 import (
-	"fmt"
 	"testing"
 	"time"
 )
 
 func TestLogJobGroupConfig_New(t *testing.T) {
-	parms := StartupParameters{}
+
+	lg := LogJobGroup{}
+
 	thisSrcFileName := "logjobgroupconfig_test.go"
 	thisMethodName := "TestLogJobGroupConfig_New"
 	thisErrBlockNo := int64(80000)
-	parms.StartTime = time.Now()
-	parms.AppVersion = "2.0.0"
-	parms.LogMode = LogVERBOSE
-	parms.AppLogPath = "./cmdrXLog"
-	parms.AppName = "CmdrX"
-	parms.AppExeFileName = "CmdrX.exe"
-	parms.NoOfJobs = 37
-	parms.CommandFileName = "CmdrX.xml"
+	lg.AppPathFileNameExt ,_ = FileMgr{}.New("../app/cmdrX.exe")
+	lg.CmdPathFileNameExt, _ = FileMgr{}.New("../app/cmdrXCmds.xml")
+	lg.AppStartTimeTzu, _ = TimeZoneUtility{}.New(time.Now().UTC(), "Local")
+	lg.BatchStartTimeTzu, _ = TimeZoneUtility{}.New(lg.AppStartTimeTzu.TimeUTC, "Local")
+	lg.AppVersion = "2.0.0"
+	lg.LogMode = LogVERBOSE
+	dt := DateTimeUtility{}
+	dateTimeStamp := dt.GetDateTimeStr(lg.AppStartTimeTzu.TimeOut)
+	logFileNameExt :=  lg.AppPathFileNameExt.FileName + "_" + dateTimeStamp + ".log"
+	appErrFileNameExt := lg.AppPathFileNameExt.FileName + "_Errors_" + dateTimeStamp + ".txt"
+	logPath, _ := DirMgr{}.New( "./cmdrXLog")
+	lg.LogPathFileNameExt, _ = FileMgr{}.NewFromDirMgrFileNameExt(logPath, logFileNameExt)
+	lg.AppErrPathFileNameExt, _ = FileMgr{}.NewFromDirMgrFileNameExt(logPath, appErrFileNameExt)
+	lg.NoOfJobs = 37
+	lg.BaseStartDir = lg.AppPathFileNameExt.DMgr.CopyOut()
 
 	//parent := ErrBaseInfo{}.GetNewParentInfo(thisSrcFileName, thisMethodName, thisErrBlockNo)
 	msgCtx := OpsMsgContextInfo{
@@ -30,36 +38,10 @@ func TestLogJobGroupConfig_New(t *testing.T) {
 
 	parentHistory := []OpsMsgContextInfo{msgCtx}
 
-	lg := LogJobGroup{}
-
-	om := lg.New(parms, parentHistory)
+	om := lg.New(parentHistory)
 
 	if om.IsError() {
-		t.Errorf("Expected om.IsError() == false, got %v", om.IsError())
-	}
-
-	if parms.CommandFileName != lg.CommandFileName {
-		t.Error(fmt.Sprintf("Expected CommandFileName = %v, got ", parms.CommandFileName), lg.CommandFileName)
-	}
-
-	if parms.StartTime != lg.StartTime {
-		t.Error(fmt.Sprintf("Expected Start Time = %v, got", parms.StartTime.String()), lg.StartTime.String())
-	}
-
-	if parms.AppVersion != lg.AppVersion {
-		t.Error(fmt.Sprintf("Expected App Version = %v, got", parms.AppVersion), lg.AppVersion)
-	}
-
-	if parms.AppName != lg.AppName {
-		t.Error(fmt.Sprintf("Expected App Name = %v, got", parms.AppName), lg.AppName)
-	}
-
-	if parms.LogMode != lg.LogMode {
-		t.Error(fmt.Sprintf("Expected Log Mode = %v, got", parms.LogMode), lg.LogMode)
-	}
-
-	if parms.NoOfJobs != lg.AppNoOfJobs {
-		t.Error(fmt.Sprintf("Expected Number Of Jobs = %v, got", parms.NoOfJobs), lg.AppNoOfJobs)
+		t.Errorf("Expected om.IsError() == false, got %v. Error='%v'", om.IsError(), om.Error())
 	}
 
 }
